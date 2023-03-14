@@ -9,27 +9,59 @@
     <title>Usuários</title>
 </head>
 
-<body onload="startFunctions()">
-
+<body onload="startFunctions()" class="flex-c">
+    <div class="container-form flex-c">
+        <h1>Cadastro de Usuários</h1>
+        <br>
+        <div class="input-group">
+            <input required="" type="text" name="text" autocomplete="off" class="input">
+            <label class="user-label">Nome</label>
+        </div>
+        <br>
+        <br>
+        <div class="input-group">
+            <input required="" type="text" name="text" autocomplete="off" class="input">
+            <label class="user-label">Email</label>
+        </div>
+        <br>
+        <br>
+        <div class="input-group">
+            <input required="" type="text" name="text" autocomplete="off" class="input">
+            <label class="user-label">Código</label>
+        </div>
+        <br>
+        <br>
+        <button class="cadastrar">
+            Cadastrar
+        </button>
+    </div>
+    <div class="container-list flex-c">
+        <table>
+            <tr>
+                <td></td>
+                <td>Código</td>
+                <td>Nome</td>
+                <td>Email</td>
+            </tr>
+            <tr>
+                <td style="background-color: red; opacity: 0.5;"></td>
+                <td>21</td>
+                <td>André Carvalho</td>
+                <td>andre.carvalhobjj2002@gmail.com</td>
+            </tr>
+            <tr>
+                <td style="background-color: green; opacity: 0.5;"></td>
+                <td>19</td>
+                <td>Laila Poersch</td>
+                <td>meu.nenem@gmail.com</td>
+            </tr>
+        </table>
+    </div>
 </body>
 <script>
     function startFunctions() {
-        teste()
-    }
-    function teste() {
-        fetch('./conn.php')
-            .then(data => {
-                if (!data.ok) {
-                    throw Error(data.status);
-                }
-                return data.json();
-            }).then(update => {
-                console.log(update)
-            }).catch(e => {
-                console.log(e);
-            });
 
-    }
+    }    
 </script>
 
 </html>
