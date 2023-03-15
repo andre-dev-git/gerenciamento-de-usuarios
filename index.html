@@ -10,31 +10,43 @@
 </head>
 
 <body onload="startFunctions()" class="flex-c">
-    <div class="container-form flex-c">
-        <h1>Cadastro de Usuários</h1>
-        <br>
-        <div class="input-group">
-            <input required="" type="text" name="text" autocomplete="off" class="input">
-            <label class="user-label">Nome</label>
+    <form>
+        <div class="container-form flex-c">
+            <h1>Cadastro de Usuários</h1>
+            <br>
+            <div class="input-group">
+                <input required="" type="text" id="nome" autocomplete="off" class="input">
+                <label class="user-label">Nome</label>
+            </div>
+            <br>
+            <br>
+            <div class="input-group">
+                <input required="" type="text" id="email" autocomplete="off" class="input">
+                <label class="user-label">Email</label>
+            </div>
+            <br>
+            <br>
+            <div class="input-group">
+                <input required="" type="number" id="codigo" autocomplete="off" class="input">
+                <label class="user-label">Código</label>
+            </div>
+            <br>
+            <br>
+            <select size="1">
+                <option value="">Selecione uma cor</option>
+                <option value="1">Azul</option>
+                <option value="2">Vermelho</option>
+                <option value="3">Amarelo</option>
+                <option value="4">Verde</option>
+            </select>
+            <br>
+            <br>
+            <button class="cadastrar" id="submit">
+                Cadastrar
+            </button>
+
         </div>
-        <br>
-        <br>
-        <div class="input-group">
-            <input required="" type="text" name="text" autocomplete="off" class="input">
-            <label class="user-label">Email</label>
-        </div>
-        <br>
-        <br>
-        <div class="input-group">
-            <input required="" type="text" name="text" autocomplete="off" class="input">
-            <label class="user-label">Código</label>
-        </div>
-        <br>
-        <br>
-        <button class="cadastrar">
-            Cadastrar
-        </button>
-    </div>
+    </form>
     <div class="container-list flex-c">
         <table>
             <tr>
@@ -43,25 +55,88 @@
                 <td>Nome</td>
                 <td>Email</td>
             </tr>
-            <tr>
-                <td style="background-color: red; opacity: 0.5;"></td>
-                <td>21</td>
-                <td>André Carvalho</td>
-                <td>andre.carvalhobjj2002@gmail.com</td>
-            </tr>
-            <tr>
-                <td style="background-color: green; opacity: 0.5;"></td>
-                <td>19</td>
-                <td>Laila Poersch</td>
-                <td>meu.nenem@gmail.com</td>
-            </tr>
         </table>
     </div>
 </body>
 <script>
     function startFunctions() {
+        atualizarTabela()
+    }
+    document.getElementById("submit").addEventListener("click", function (event) {
+        event.preventDefault()
+        const dados = {}
+        dados.nome = document.getElementById("nome").value
+        dados.email = document.getElementById("email").value
+        dados.codigo = document.getElementById("codigo").value
+        fetch('./inserirDados.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                "nome": dados.nome,
+                "email": dados.email,
+                "codigo": dados.codigo
+            })
+        })
+            .then(response => response.json())
+            .then(json => atualizarTabela())
+            .catch(err => console.log(err))
 
-    }    
+    });
+    function atualizarTabela() {
+        fetch('./consultarDados.php')
+            .then(response => response.json())
+            .then(dados => {
+                dados.forEach((element, index) => {
+                    const topoTabela = document.createElement("tr")
+                    const usuario = document.createElement("tr")
+                    const cor = document.createElement("td")
+                    cor.style.background = element[0]
+                    const codigo = document.createElement("td")
+                    codigo.innerText = element[1]
+                    const nome = document.createElement("td")
+                    nome.innerText = element[2]
+                    const email = document.createElement("td")
+                    email.innerText = element[3]
+                    usuario.append(cor)
+                    usuario.append(codigo)
+                    usuario.append(nome)
+                    usuario.append(email)
+                    document.querySelector(".container-list table").append(usuario)
+                });
+            })
+            .catch(err => console.log(err))
+    }
+    let select = document.querySelector('select');
+
+    select.addEventListener('focus', () => {
+        select.size = 5;
+        select.classList.add('fadeIn');
+        select.classList.remove('fadeOut');
+        select.style.backgroundColor = '#0b2c67';
+    });
+
+    select.addEventListener('blur', () => {
+        select.size = 1;
+        select.classList.add('fadeOut');
+        select.classList.remove('fadeIn');
+        select.style.backgroundColor = '#0b2c67';
+    });
+
+    select.addEventListener('change', () => {
+        select.size = 1;
+        select.blur();
+        select.style.backgroundColor = '#0b2c67';
+    });
+
+    select.addEventListener('mouseover', () => {
+        if (select.size == 1) {
+            select.style.backgroundColor = 'rgb(247, 247, 247)';
+        }
+    });
+    select.addEventListener('mouseout', () => {
+        if (select.size == 1) {
+            select.style.backgroundColor = '#FFF';
+        }
+    });
 </script>
 
 </html>
