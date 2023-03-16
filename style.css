@@ -139,12 +139,20 @@ input:valid~label {
     border: 0px !important;
 }
 
-.container-list table tr:nth-child(1) td:nth-child(4) {
+.container-list table tr:nth-child(1) td:nth-child(5) {
     border: 0px solid transparent;
     border-top-right-radius: 20px;
 }
 
+.container-list i {
+    margin: 10px;
+    transition: .3s;
+    cursor: pointer;
+}
 
+.container-list i:hover {
+    transform: scale(1.2);
+}
 
 
 select {

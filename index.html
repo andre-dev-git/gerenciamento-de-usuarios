@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="./icones/css/fontawesome.css" rel="stylesheet">
+    <link href="./icones/css/brands.css" rel="stylesheet">
+    <link href="./icones/css/solid.css" rel="stylesheet">
     <title>Usuários</title>
 </head>
 
@@ -54,6 +57,7 @@
                 <td>Código</td>
                 <td>Nome</td>
                 <td>Email</td>
+                <td>Ações</td>
             </tr>
         </table>
     </div>
@@ -77,7 +81,7 @@
             })
         })
             .then(response => response.json())
-            .then(json => atualizarTabela())
+            .then(json => document.location.reload(true))
             .catch(err => console.log(err))
 
     });
@@ -95,11 +99,15 @@
                     const nome = document.createElement("td")
                     nome.innerText = element[2]
                     const email = document.createElement("td")
+                    const acoes = document.createElement("td")
+                    acoes.innerHTML = '<i class="fa-solid fa-pen fa-2x" onclick="editUser(' + element[1] + ')"></i > ' +
+                        '<i class="fa-solid fa-trash fa-2x" onclick="deleteUser(' + element[1] + ')"></i>'
                     email.innerText = element[3]
                     usuario.append(cor)
                     usuario.append(codigo)
                     usuario.append(nome)
                     usuario.append(email)
+                    usuario.append(acoes)
                     document.querySelector(".container-list table").append(usuario)
                 });
             })
@@ -137,6 +145,26 @@
             select.style.backgroundColor = '#FFF';
         }
     });
+    function deleteUser(id) {
+        fetch('./deletarUsuario.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                "id": id
+            })
+        })
+            .then(response => response.json())
+            .then(dados => console.log(dados))
+    }
+    function editUser(id) {
+        fetch('./deletarUsuario.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                "id": id
+            })
+        })
+            .then(response => response.json())
+            .then(dados => console.log(dados))
+    }
 </script>
 
 </html>
