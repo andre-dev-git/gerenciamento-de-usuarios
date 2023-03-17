@@ -19,5 +19,9 @@ foreach($users as $user){
     $dados[$i][3] = $user->email;
     $i++;
 }
+if(empty($dados)){
+    echo json_encode(false);    
+    die();
+}
 echo json_encode($dados);
 ?>

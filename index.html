@@ -30,12 +30,12 @@
             <br>
             <br>
             <div class="input-group">
-                <input required="" type="number" id="codigo" autocomplete="off" class="input">
+                <input required="" type="number" id="codigo" onkeyup="veriricarUsuario()" autocomplete="off" class="input">
                 <label class="user-label">Código</label>
             </div>
             <br>
             <br>
-            <select size="1">
+            <select size="1" id="cor">
                 <option value="">Selecione uma cor</option>
                 <option value="1">Azul</option>
                 <option value="2">Vermelho</option>
@@ -68,16 +68,26 @@
     }
     document.getElementById("submit").addEventListener("click", function (event) {
         event.preventDefault()
-        const dados = {}
-        dados.nome = document.getElementById("nome").value
-        dados.email = document.getElementById("email").value
-        dados.codigo = document.getElementById("codigo").value
+        const dados = []
+        dados[0] = document.getElementById("nome").value
+        dados[1] = document.getElementById("email").value
+        dados[2] = document.getElementById("codigo").value
+        dados[3] = document.getElementById("cor").value
+        if(dados.indexOf("") != -1){
+            alert("Preencha todos os campos!")
+            return false
+        }
+        if(!codigoValido){
+            alert("Insira um código válido!")
+            return false
+        }
         fetch('./inserirDados.php', {
             method: 'POST',
             body: new URLSearchParams({
-                "nome": dados.nome,
-                "email": dados.email,
-                "codigo": dados.codigo
+                "nome": dados[0],
+                "email": dados[1],
+                "codigo": dados[2],
+                "cor": dados[3]
             })
         })
             .then(response => response.json())
@@ -90,24 +100,33 @@
             .then(response => response.json())
             .then(dados => {
                 dados.forEach((element, index) => {
-                    const topoTabela = document.createElement("tr")
-                    const usuario = document.createElement("tr")
-                    const cor = document.createElement("td")
-                    cor.style.background = element[0]
-                    const codigo = document.createElement("td")
-                    codigo.innerText = element[1]
-                    const nome = document.createElement("td")
-                    nome.innerText = element[2]
-                    const email = document.createElement("td")
-                    const acoes = document.createElement("td")
-                    acoes.innerHTML = '<i class="fa-solid fa-pen fa-2x" onclick="editUser(' + element[1] + ')"></i > ' +
-                        '<i class="fa-solid fa-trash fa-2x" onclick="deleteUser(' + element[1] + ')"></i>'
-                    email.innerText = element[3]
-                    usuario.append(cor)
-                    usuario.append(codigo)
-                    usuario.append(nome)
-                    usuario.append(email)
-                    usuario.append(acoes)
+                    let usuario
+                    if(element.length == 0){
+                        usuario = document.createElement("tr")
+                        const aviso = document.createElement("td")
+                        aviso.colSpan = "5"
+                        aviso.innerText = "Sem usuários cadastrados"
+                        aviso.style.textAlign = "center"
+                        usuario.append(aviso)
+                    } else {
+                        const topoTabela = document.createElement("tr")
+                        usuario = document.createElement("tr")
+                        const cor = document.createElement("td")
+                        cor.style.background = element[0]
+                        const codigo = document.createElement("td")
+                        codigo.innerText = element[1]
+                        const nome = document.createElement("td")
+                        nome.innerText = element[2]
+                        const email = document.createElement("td")
+                        const acoes = document.createElement("td")
+                        acoes.innerHTML = '<i class="fa-solid fa-trash fa-2x" onclick="deleteUser(' + element[1] + ')"></i>'
+                        email.innerText = element[3]
+                        usuario.append(cor)
+                        usuario.append(codigo)
+                        usuario.append(nome)
+                        usuario.append(email)
+                        usuario.append(acoes)
+                    }
                     document.querySelector(".container-list table").append(usuario)
                 });
             })
@@ -153,17 +172,19 @@
             })
         })
             .then(response => response.json())
-            .then(dados => console.log(dados))
+            .then(dados => document.location.reload(true))
     }
-    function editUser(id) {
-        fetch('./deletarUsuario.php', {
+    let codigoValido = false
+    function veriricarUsuario(){
+        const codigo = document.getElementById("codigo").value
+        fetch('./verificarUsuario.php', {
             method: 'POST',
             body: new URLSearchParams({
-                "id": id
+                "id": codigo
             })
         })
             .then(response => response.json())
-            .then(dados => console.log(dados))
+            .then(dados => codigoValido = dados)
     }
 </script>
 
